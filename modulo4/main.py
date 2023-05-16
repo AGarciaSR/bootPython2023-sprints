@@ -1,5 +1,7 @@
 # Importaciones de módulos
 import time
+import hashlib
+from datetime import date
 from excepcion.excepcion_usuario import NuevaExcepcion
 from functions.banner import banner
 from functions.muestra_clientes import muestra_clientes
@@ -14,6 +16,10 @@ stock = []
 fields = {}
 listaClientes = []
 compras = []
+    
+def crea_cliente(user):
+    nuevo_cliente = Cliente(user[0],user[1],user[2],user[3],user[4],user[5],user[6],int(user[7]),user[8])
+    listaClientes.append(nuevo_cliente)
     
 def dump_csv_data(file,typefile):
     global fields
@@ -31,19 +37,23 @@ def dump_csv_data(file,typefile):
     if typefile == "users":
         for user in data:
             user = user.strip().split(';')
-            nuevo_cliente = Cliente(user[0],user[1],user[2],user[3],user[4],user[5],user[6],int(user[7]),user[8])
-            listaClientes.append(nuevo_cliente)
+            crea_cliente(user)
         
 def write_csv_data(file,typefile):
+    global fields
     users_file = open(file,'w', encoding = 'utf-8')
-    first_line = ''
+    i = 1
     for data in fields[typefile]:
-        first_line + data + ';'
-    first_line = first_line[:-1]
-    users_file.write(first_line+"\n")
+        if i < len(fields[typefile]):
+            users_file.write(data+";")
+            i += 1
+        else:
+            users_file.write(data)
+    users_file.write("\n")
     if typefile == "users":
         for user in listaClientes:
-            users_file.write(f"{user.id};{user.nombre};{user.apellido};{user.correo};{user.fecha_registro};{user.password};{user.ciudad};{int(user.get_saldo())};{user.compras}\n")
+            users_file.write(f"{user.id};{user.nombre};{user.apellido};{user.correo};{user.fecha_registro};{user.password};{user.ciudad};{int(user.get_saldo())};{user.compras}\n".replace("\'","\""))
+    users_file.close()
     
 # Verificar el stock antes de procesar la compra
 def verifica_stock(producto,cantidad):
@@ -55,7 +65,8 @@ def verifica_stock(producto,cantidad):
 def ingresa_saldo():
     cliente = muestra_clientes(listaClientes)
     ingreso = int(input('Ingrese el saldo a añadir: '))
-    listaClientes[cliente-1].add_saldo(ingreso)
+    listaClientes[cliente-1].mod_saldo(ingreso)
+    write_csv_data('clientes.csv','users')
     
 def ver_saldo():
     cliente = muestra_clientes(listaClientes)
@@ -89,18 +100,23 @@ class Administrativo(Usuario):
         print('El producto ha sido añadido al catálogo')
         time.sleep(2)
     
-    # Ingresa nuevo cliente a la "base de datos" (necesario recodificar a modo de objetos)
-    """def ingresa_cliente(self):
+    # Ingresa nuevo cliente a la "base de datos"
+    def ingresa_cliente(self):
+        user = []
         banner('Ingresar nuevo cliente')
-        nombre = input('Ingrese el nombre del cliente: ')
-        password = input('Ingrese la contraseña del cliente: ')
-        if nombre not in listaClientes:
-            id = int(list(listaClientes)[-1]) + 1
-            clientes[str(id)] = {'nombre' : nombre, 'password' : password}
-            print('Se añadió el cliente a la base de datos')
-        else:
-            print('El cliente ya está registrado, se ignorarán los datos')
-        time.sleep(2)"""
+        user.append(input('Ingrese el ID del cliente: '))
+        user.append(input('Ingrese el nombre del cliente: '))
+        user.append(input('Ingrese el apellido del cliente: '))
+        user.append(input('Ingrese el correo electrónico del cliente: '))
+        user.append(date.today())
+        user.append(hashlib.md5(input('Ingrese la contraseña del cliente: ').encode('utf-8')).hexdigest())
+        user.append(input('Ingrese la ciudad del cliente: '))
+        user.append(input('Ingrese el saldo inicial del cliente: '))
+        user.append("[]")
+        crea_cliente(user)
+        write_csv_data('clientes.csv','users')
+        print('El cliente ha sido añadido a la base de datos')
+        time.sleep(2)
         
     # Mostrar clientes registrados
     def listado_clientes(self):
@@ -281,7 +297,7 @@ producto1 = Producto('345675', 'Polera roja estampada', 'Vestuario Adulto', 12, 
 bodega1 = Bodega('bodega1', 'Bodega Santiago', {'Polera roja estampada' : 900})
 stock.append(producto1)
 
-functions = ['', '''administrativo.ingresa_cliente''', administrativo.ingresa_producto, vendedor.actualiza_stock, vendedor.muestra_unidades, vendedor.muestra_unidades_producto, administrativo.listado_clientes, ingresa_saldo, ver_saldo, ver_promedio_compras, vendedor.vender_producto]
+functions = ['', administrativo.ingresa_cliente, administrativo.ingresa_producto, vendedor.actualiza_stock, vendedor.muestra_unidades, vendedor.muestra_unidades_producto, administrativo.listado_clientes, ingresa_saldo, ver_saldo, ver_promedio_compras, vendedor.vender_producto]
 
 while True:
     banner('Bienvenido')
@@ -298,8 +314,6 @@ while True:
         # Llamamos a la función correspondiente a la posición en la lista
         else:
             functions[eleccion]()
-    except IndexError:
-        print("Ha seleccionado una opción incorrecta")
     except ValueError: 
         print("Ha introducido un caracter inválido")
     input('Pulse Enter para continuar')

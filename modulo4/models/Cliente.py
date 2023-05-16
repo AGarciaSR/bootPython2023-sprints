@@ -2,7 +2,7 @@ import json
 from .Usuario import Usuario
 
 class Cliente(Usuario):
-    def __init__(self, id, nombre, apellido, correo, fecha_registro, password, ciudad, saldo, compras):
+    def __init__(self, id, nombre, apellido, correo, fecha_registro, password, ciudad, saldo, compras = None):
         self.apellido = apellido
         self.correo = correo
         self.fecha_registro = fecha_registro
