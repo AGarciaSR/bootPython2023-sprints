@@ -1,0 +1,2 @@
+class NuevaExcepcion(Exception):
+    pass
