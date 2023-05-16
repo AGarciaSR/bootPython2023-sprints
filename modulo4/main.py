@@ -36,9 +36,11 @@ def dump_csv_data(file,typefile):
         
 def write_csv_data(file,typefile):
     users_file = open(file,'w', encoding = 'utf-8')
+    first_line = ''
     for data in fields[typefile]:
-        users_file.write(data+";")
-    users_file.write("\n")
+        first_line + data + ';'
+    first_line = first_line[:-1]
+    users_file.write(first_line+"\n")
     if typefile == "users":
         for user in listaClientes:
             users_file.write(f"{user.id};{user.nombre};{user.apellido};{user.correo};{user.fecha_registro};{user.password};{user.ciudad};{int(user.get_saldo())};{user.compras}\n")
@@ -254,7 +256,7 @@ class Vendedor(Usuario):
                             # "Hardcodearemos" el ID, pero en una BDD, esto se haría con un AUTO_INCREMENT
                             nueva_orden_compra = OrdenCompra("NuevaOC", productos_comprados, selDespacho, listaClientes[clienteChoose-1].id, valor_compra)
                             compras.append(nueva_orden_compra)
-                            listaClientes[clienteChoose-1].compras.append({'Productos' : productos_comprados , 'Despacho' : selDespacho , 'ValorTotal' : valor_compra})
+                            listaClientes[clienteChoose-1].compras.append({"Productos" : productos_comprados , "Despacho" : selDespacho , "ValorTotal" : valor_compra})
                             write_csv_data('clientes.csv','users')
                             break
                     else:

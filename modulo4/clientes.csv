@@ -1,5 +1,5 @@
 id;firstname;lastname;email;registerdate;password;city;credit;sales;
-1;Alberto;Garcia;agarcia@awakelab.cl;13/05/2013;e6f3e73abb1db477c9b655a970ff0a6c;Vina del Mar;235415;[{'Productos': {'Polera roja estampada': 7, 'Polera negra': 2}, 'Despacho': 1, 'ValorTotal': 42485.0}, {'Productos': {'Polera roja estampada': 5}, 'Despacho': 1, 'ValorTotal': 31775.0}]
+1;Alberto;Garcia;agarcia@awakelab.cl;13/05/2013;e6f3e73abb1db477c9b655a970ff0a6c;Vina del Mar;235415;[{"Productos": {"Polera roja estampada": 7, "Polera negra": 2}, "Despacho": 1, "ValorTotal": 42485.0}, {"Productos": {"Polera roja estampada": 5}, "Despacho": 1, "ValorTotal": 31775.0}]
 2;Jose;Martinez;jmartinez@awakelab.cl;13/05/2013;5bd29f376f76a4de87fea3cb1839e38b;Valparaiso;400000;[]
 3;Steffania;Schweikart;sschweikart@awakelab.cl;13/05/2013;2a3a6f7ac8c79c8f261ffcebaa318109;Quilpue;400000;[]
 4;Marcos;Alarcon;malarcon@awakelab.cl;13/05/2013;436856c97c0b0ad53336d4f8cabb2de9;Quillota;400000;[]
