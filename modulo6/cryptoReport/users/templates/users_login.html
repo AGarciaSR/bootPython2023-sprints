@@ -1,0 +1,11 @@
+{% extends "base_layout.html" %}
+{% load static %}
+{% block cotitle %} Login {% endblock %}
+{% block content %}
+    <h1>Log in</h1>
+    <form method="post" class="masthead">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Log In</button>
+    </form>
+{% endblock %}

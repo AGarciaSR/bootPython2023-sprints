@@ -1,0 +1,10 @@
+{% extends 'base_layout.html' %}
+
+{% block content %}
+    <h1 id="titulo">Ingresando un nuevo usuario</h1>
+    <form method="post" class="masthead">
+        {% csrf_token %}
+        {{form.as_p}}
+        <input class="btn btn-success" type="submit" value="Enviar datos">
+    </form>
+{% endblock  %}
