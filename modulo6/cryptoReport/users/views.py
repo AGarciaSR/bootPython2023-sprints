@@ -1,11 +1,13 @@
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.template import loader
+from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User, Group
 from .forms import UserRegisterForm
+import time
 
 # Create your views here.
 def users_index(request):
@@ -20,12 +22,13 @@ def users_login(request):
             if user.is_active:
                 if user is not None:
                     login(request, user)
-                    print(user.is_authenticated)
                     return redirect('index')
                 else:
-                    return HttpResponse("Usuario o contraseña incorrectos")
+                    messages.info(request, "Credenciales incorrectas, inténtelo de nuevo")
+                    return render(request, "users_login.html", {"form": form})
         else:
-            return HttpResponse("No valido")
+            messages.info(request, "Credenciales incorrectas, inténtelo de nuevo")
+            return render(request, "users_login.html", {"form": form})
     else:
         form = AuthenticationForm()
 
