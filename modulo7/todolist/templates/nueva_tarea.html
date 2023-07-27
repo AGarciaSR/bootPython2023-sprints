@@ -1,0 +1,16 @@
+{% extends "base_layout.html" %}
+{% load static %}
+{% block cotitle %} {{ cotitle }} {% endblock %}
+{% block content %}
+    <!-- Masthead-->
+    <header class="bg-primary">
+        <div class="container d-flex align-items-center flex-column">
+            <h3>{{ title }}</h3>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <input type="submit" class="btn btn-success" value="Añadir">
+            </form>
+        </div>
+    </header>
+{% endblock %}

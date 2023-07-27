@@ -1,0 +1,34 @@
+{% extends "base_layout.html" %}
+{% load static %}
+{% block cotitle %} Bienvenida {% endblock %}
+{% block content %}
+    <!-- Masthead-->
+    <header class="bg-primary">
+        <div class="container d-flex align-items-center flex-column">
+            <p class="masthead-subheading font-weight-light mb-0">Qué bueno verte de vuelta, {{request.user.first_name}}, aquí están tus tareas pendientes</p>
+            <a class="btn btn-success" href="{% url 'nueva_tarea' %}">Añadir una nueva tarea</a><br>
+            {% if message %}
+                <h4>{{ message }}</h4>
+            {% endif %}
+            <form method="post">
+                {% csrf_token %}
+                {{ form_filtro.as_p }}
+                <input type="submit" value="Filtrar">
+            </form>
+            {% for tarea in tareas %}
+                <div class="card user-card" style="width: 34rem;">
+                    <div class="card-body">
+                        <a href="{% url 'tarea_detail' tarea.id %}">
+                            <h5 class="card-title">{{ tarea.nombre }}</h5>
+                        </a>
+                        <h6 class="card-subtitle mb-2 text-muted">{{ tarea.descripcion }}</h6>
+                        <p>
+                            <b>Categoría:</b> {{ tarea.etiqueta }}<br>
+                            <b>Prioridad:</b> {{ tarea.prioridad.priority }}
+                        </p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </header>
+{% endblock %}

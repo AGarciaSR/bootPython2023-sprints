@@ -1,0 +1,39 @@
+{% extends "base_layout.html" %}
+{% load static %}
+{% block cotitle %} Detalle de la tarea {{ tarea.nombre }} {% endblock %}
+{% block content %}
+    <header class="bg-light">
+        <div class="container align-items-center flex-column">
+            <a class="btn btn-primary" href="{% url 'edita_tarea' tarea.id %}">Editar esta tarea</a>
+            <a class="btn btn-danger" href="{% url 'elimina_tarea' tarea.id %}">Eliminar</a>
+            <a class="btn btn-success" href="{% url 'completa_tarea' tarea.id %}">Completar</a>
+            <a class="btn btn-dark" href="{% url 'welcome' %}">Volver al listado</a>
+            <div class="card user-card" style="width: 34rem;">
+                <div class="card-body">
+                    {% if not tarea.completada %}
+                    <h5 class="card-title text-dark">{{ tarea.nombre }}</h5>
+                    {% else %}
+                    <h5 class="card-title text-success">{{ tarea.nombre }}</h5>
+                    {% endif %}
+                    <h6 class="card-subtitle mb-2 text-muted">{{ tarea.descripcion }}</h6>
+                    <p>
+                        <b>Categoría:</b> {{ tarea.etiqueta }}<br>
+                        <b>Prioridad:</b> {{ tarea.prioridad }}<br>
+                        <b>Añadida en:</b> {{ tarea.fecha_origen }}<br>
+                        {% if not tarea.completada %}
+                        <b>Terminar en:</b> {{ tarea.fecha_limite }}<br>
+                        {% else %}
+                        <b>Terminada en:</b> {{ tarea.fecha_completada }}<br>
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+            <h3>Observaciones:</h3>
+            <form method="post" style="text-align: inherit">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <input type="submit" class="btn btn-success" value="Editar observación">
+            </form>
+        </div>
+    </header>
+{% endblock %}
